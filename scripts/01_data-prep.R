@@ -1,5 +1,5 @@
-# This script accompanies the study: Sociodemographic risk factors for psychiatric service use among newly-diagnosed 
-# adults with type 2 diabetes in Scotland
+# This script accompanies the study: Sociodemographic factors and psychiatric service use among adults newly diagnosed 
+# with type 2 diabetes in Scotland
 #
 # Data-analysis was conducted using SDRN-NDS data within the diabepi safe haven. File names and paths within the haven 
 # have been redacted.
@@ -83,12 +83,19 @@ subset_sens <- subset(data_sens, select = c(serialno, age, sex, simd_dec, health
 
 #* 1.3 Categorising age (for KM plots) =================================================================================
 #
-# Only for main analysis
-#
+#** 1.3.1 Main analysis ------------------------------------------------------------------------------------------------
+# 
 subset_main$age_cat <- cut(subset_main$age,
                       breaks = c(18,40,50,60,70,Inf),
                       labels = c("18-39", "40-49", "50-59", "60-69", "70+"),
                       right = FALSE)
+
+#** 1.3.2 Sensitivity analysis -----------------------------------------------------------------------------------------
+# 
+subset_sens$age_cat <- cut(subset_sens$age,
+                           breaks = c(18,40,50,60,70,Inf),
+                           labels = c("18-39", "40-49", "50-59", "60-69", "70+"),
+                           right = FALSE)
 
 #* 1.4 Transforming SIMD deciles to quintiles ==========================================================================
 #
@@ -480,6 +487,12 @@ rm(include,s1,s2,s3,summary)
 # 
 summary_years <- summary(round(complete_main$time_years, 1))
 print(summary_years)
+
+summary_years_with_pre <- summary(round(complete_main_with_pre$time_years, 1))
+print(summary_years_with_pre)
+
+summary_years_without_pre <- summary(round(complete_main_without_pre$time_years, 1))
+print(summary_years_without_pre)
 }
 
 #* 3.4 Total event counts after diabetes diagnosis =====================================================================
