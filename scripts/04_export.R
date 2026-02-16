@@ -1,5 +1,5 @@
-# This script accompanies the study: Sociodemographic risk factors for psychiatric service use among newly-diagnosed 
-# adults with type 2 diabetes in Scotland
+# This script accompanies the study: Sociodemographic factors and psychiatric service use among adults newly diagnosed 
+# with type 2 diabetes in Scotland
 #
 # Data-analysis was conducted using SDRN-NDS data within the diabepi safe haven. File paths within the haven have been 
 # redacted.
@@ -133,21 +133,11 @@ rm(combined, p1A_plot, p1A_table, p1B_plot, p1B_table, p1C_plot, p1C_table, p1D_
 # 
 {
 #
-# Design 1 -------------------------------------------------------------------------------------------------------------
-# 
 ggsave("filepath/filename.png", plot=figure_2_faceted,
        width = 10, height = 11, dpi = 600)
 
 ggsave("filepath/filename.pdf", plot=figure_2_faceted,
        width = 10, height = 11, dpi = 600)
-
-# Design 2
-# 
-ggsave("filepath/filename", plot=figure_2_basic,
-       width = 10, height = 17, dpi = 600)
-
-ggsave("filepath/filename", plot=figure_2_basic,
-       width = 10, height = 17, dpi = 600)
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,9 +164,6 @@ sink("filepath/filename.txt")
 
 cat("\nHypothesis tests to check randomness of missing values\n\n")
 cat("\n=================================\n")
-
-cat("\nt-test for continuous age\n\n")
-print(t_test_age)
 
 cat("\n=================================\n")
 cat("\nChi-squared test for categorical age\n\n")
