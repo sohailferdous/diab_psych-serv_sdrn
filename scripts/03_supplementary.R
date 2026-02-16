@@ -1,5 +1,5 @@
-# This script accompanies the study: Sociodemographic risk factors for psychiatric service use among newly-diagnosed 
-# adults with type 2 diabetes in Scotland
+# This script accompanies the study: Sociodemographic factors and psychiatric service use among adults newly diagnosed 
+# with type 2 diabetes in Scotland
 #
 # Data-analysis was conducted using SDRN-NDS data within the diabepi safe haven. File paths within the haven have been 
 # redacted.
@@ -27,8 +27,8 @@ uni_sens_sex.ph_without_pre <- coxph(surv_object_sens_without_pre~sex, data=comp
 
 #*** 6.1.1.2 Age ####
 #
-uni_sens_age.ph_with_pre <- coxph(surv_object_sens_with_pre~age, data=complete_sens_with_pre)
-uni_sens_age.ph_without_pre <- coxph(surv_object_sens_without_pre~age, data=complete_sens_without_pre)
+uni_sens_age.ph_with_pre <- coxph(surv_object_sens_with_pre~age_cat, data=complete_sens_with_pre)
+uni_sens_age.ph_without_pre <- coxph(surv_object_sens_without_pre~age_cat, data=complete_sens_without_pre)
 
 #*** 6.1.1.3 Ethnicity ####
 #
@@ -42,21 +42,20 @@ uni_sens_simd.ph_without_pre <- coxph(surv_object_sens_without_pre~simd, data=co
 
 #** 6.1.2 Multivariate (adjusted) models -------------------------------------------------------------------------------
 #
-multi_sens.ph_with_pre <- coxph(surv_object_sens_with_pre~sex+age+ethnicity+simd+diag_year, data=complete_sens_with_pre)
-multi_sens.ph_without_pre <- coxph(surv_object_sens_without_pre~sex+age+ethnicity+simd+diag_year, data=complete_sens_without_pre)
+multi_sens.ph_with_pre <- coxph(surv_object_sens_with_pre~sex+age_cat+ethnicity+simd+diag_year, data=complete_sens_with_pre)
+multi_sens.ph_without_pre <- coxph(surv_object_sens_without_pre~sex+age_cat+ethnicity+simd+diag_year, data=complete_sens_without_pre)
 
 #** 6.1.3 Compile model estimates and p-values into a table ------------------------------------------------------------
-models <- list(
-  "Sex (With Pre)" = uni_sens_sex.ph_with_pre,
-  "Sex (Without Pre)" = uni_sens_sex.ph_without_pre,
-  "Age (With Pre)" = uni_sens_age.ph_with_pre,
-  "Age (Without Pre)" = uni_sens_age.ph_without_pre,
-  "Ethnicity (With Pre)" = uni_sens_ethnicity.ph_with_pre,
-  "Ethnicity (Without Pre)" = uni_sens_ethnicity.ph_without_pre,
-  "SIMD (With Pre)" = uni_sens_simd.ph_with_pre,
-  "SIMD (Without Pre)" = uni_sens_simd.ph_without_pre,
-  "Multivariable (With Pre)" = multi_sens.ph_with_pre,
-  "Multivariable (Without Pre)" = multi_sens.ph_without_pre)
+models <- list("Sex (With Pre)" = uni_sens_sex.ph_with_pre,
+               "Sex (Without Pre)" = uni_sens_sex.ph_without_pre,
+               "Age (With Pre)" = uni_sens_age.ph_with_pre,
+               "Age (Without Pre)" = uni_sens_age.ph_without_pre,
+               "Ethnicity (With Pre)" = uni_sens_ethnicity.ph_with_pre,
+               "Ethnicity (Without Pre)" = uni_sens_ethnicity.ph_without_pre,
+               "SIMD (With Pre)" = uni_sens_simd.ph_with_pre,
+               "SIMD (Without Pre)" = uni_sens_simd.ph_without_pre,
+               "Multivariable (With Pre)" = multi_sens.ph_with_pre,
+               "Multivariable (Without Pre)" = multi_sens.ph_without_pre)
 
 # Creating a function to extract model estimates
 extract_cox_results <- function(model, model_name) {
@@ -88,7 +87,7 @@ missing_main <- subset_main %>%
 
 #* 7.2 Contingency table and hypothesis testing ========================================================================
 #
-# Chi-sq tests were conducted for categorical variables and t-test was done for continuous age
+# Chi-sq tests were conducted
 # 
 #** 7.2.1 sex ----------------------------------------------------------------------------------------------------------
 {
@@ -100,13 +99,7 @@ chisq_test_sex <- chisq.test(sex_table)
 print(chisq_test_sex)
 }
 
-#** 7.2.2 Age (continuous) ---------------------------------------------------------------------------------------------
-{
-t_test_age <- t.test(complete_main$age, missing_main$age)
-print(t_test_age)
-}
-
-#** 7.2.3 Age (categorical) --------------------------------------------------------------------------------------------
+#** 7.2.2 Age ----------------------------------------------------------------------------------------------------------
 {
 combined_age_cat <- c(complete_main$age_cat, missing_main$age_cat)
 group_labels <- c(rep("complete_main", nrow(complete_main)), rep("missing_main", nrow(missing_main)))
@@ -116,7 +109,7 @@ chisq_test_age <- chisq.test(age_table)
 print(chisq_test_age)
 }
 
-#** 7.2.4 SIMD ---------------------------------------------------------------------------------------------------------
+#** 7.2.3 SIMD ---------------------------------------------------------------------------------------------------------
 {
 combined_simd <- c(complete_main$simd, missing_main$simd)
 group_labels <- c(rep("complete_main", nrow(complete_main)), rep("missing_main", nrow(missing_main)))
@@ -126,7 +119,7 @@ chisq_test_simd <- chisq.test(simd_table)
 print(chisq_test_simd)
 }
 
-#** 7.2.5 Ethnicity ----------------------------------------------------------------------------------------------------
+#** 7.2.4 Ethnicity ----------------------------------------------------------------------------------------------------
 {
 missing_main_eth <- missing_main %>%
   filter(ethnicity != "missing_main")
